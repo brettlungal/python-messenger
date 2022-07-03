@@ -1,5 +1,6 @@
 from client import Client
 import mysql.connector
+import urllib.request
 import pwinput
 db = mysql.connector.connect(user='python', password='&MotoX2192011!', host='184.64.57.111', database='python_messenger')
 cursor = db.cursor()
@@ -11,9 +12,18 @@ def handle_login(username:str ,password:str ) -> bool:
     acct = cursor.fetchone()
     return acct
 
-def handle_signup(username:str, password:str) -> bool:
-    #TODO implement
-    pass
+def handle_signup(username:str, password:str) -> None:
+    add_user = ("INSERT INTO user "
+        "(username, password, ip, port) "
+        "VALUES (%s, %s, %s, %s)")
+    ip = get_public_ip()
+    user_data = (username, password, ip,'9000')
+    cursor.execute(add_user,user_data)
+    db.commit()
+
+def get_public_ip():
+    external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
+    return external_ip
 
 if __name__ == "__main__":
     print("""             ____________________________________________________
@@ -67,5 +77,7 @@ if __name__ == "__main__":
             break
         else:
             print("Invalid entry")
-
+    
+    cursor.close()
+    db.close()
 
