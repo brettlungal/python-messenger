@@ -14,13 +14,3 @@ class Client:
         while True:
             data = input("Me: ")
             self.comms.send_message(data, self.friend_data)
-
-
-
-if __name__ == "__main__":
-    my_ip = sys.argv[1]
-    my_port = int(sys.argv[2])
-    friend_ip = sys.argv[3]
-    friend_port = int(sys.argv[4])
-
-    c1 = Client(my_ip, my_port, friend_ip, friend_port)
