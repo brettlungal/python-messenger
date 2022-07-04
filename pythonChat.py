@@ -28,7 +28,7 @@ class PythonChat:
         add_user = ("INSERT INTO user "
             "(username, password, ip, port) "
             "VALUES (%s, %s, %s, %s)")
-        ip = get_public_ip()
+        ip = self.get_public_ip()
         user_data = (username, password, ip,'9000')
         cursor.execute(add_user,user_data)
         db.commit()
@@ -60,11 +60,11 @@ class PythonChat:
         user_exists = True
         while user_exists:
             username = input("Choose a username: ")
-            user_exists = username_exists(username)
+            user_exists = self.username_exists(username)
             if user_exists:
                 print("Username already exists, please enter another.")
         password = pwinput.pwinput('Enter a password: ')
-        handle_signup(username,password)
+        self.handle_signup(username,password)
 
     def run(self):
         print("""             ____________________________________________________
