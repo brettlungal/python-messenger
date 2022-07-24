@@ -3,7 +3,12 @@ import mysql.connector
 import urllib.request
 import ssl
 import pwinput
-db = mysql.connector.connect(user='python', password='&MotoX2192011!', host='184.64.57.111', database='python_messenger')
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+db = mysql.connector.connect(user=os.environ['DB_USER'], password=os.environ['DB_PASS'], host=os.environ['DB_HOST'], database=os.environ['DB_NAME'])
 cursor = db.cursor()
 
 class PythonChat:
