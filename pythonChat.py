@@ -24,13 +24,13 @@ class PythonChat:
         return external_ip
 
     def handle_login(self, username:str ,password:str ) -> bool:
-        queryString = f"SELECT * FROM user WHERE username='{username}' AND password='{password}'"
+        queryString = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
         cursor.execute(queryString)
         acct = cursor.fetchone()
         return acct
 
     def handle_signup(self, username:str, password:str) -> None:
-        add_user = ("INSERT INTO user "
+        add_user = ("INSERT INTO users "
             "(username, password, ip, port) "
             "VALUES (%s, %s, %s, %s)")
         ip = self.get_public_ip()
@@ -39,7 +39,7 @@ class PythonChat:
         db.commit()
 
     def username_exists(self, username:str) -> bool:
-        queryString = f"SELECT * FROM user WHERE username='{username}'"
+        queryString = f"SELECT * FROM users WHERE username='{username}'"
         cursor.execute(queryString)
         acct = cursor.fetchone()
         return True if acct else False
@@ -123,7 +123,8 @@ class PythonChat:
             # Lastly close connection
             cursor.close()
             db.close()
-        except:
+        except Exception as e:
+            print(e)
             print("Something went wrong - closing connections")
             cursor.close()
             db.close()
