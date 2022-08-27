@@ -1,20 +1,23 @@
-from client import Client
-import mysql.connector
 import urllib.request
 import ssl
 import pwinput
+from interfaces.menu import Menu
+from utils.constants import DEFAULT_PORT
+from persistence.user_actions import UserActions
+from dotenv import load_dotenv
+import mysql.connector
 import os
 from dotenv import load_dotenv
-
-load_dotenv()
-
-db = mysql.connector.connect(user=os.environ['DB_USER'], password=os.environ['DB_PASS'], host=os.environ['DB_HOST'], database=os.environ['DB_NAME'])
-cursor = db.cursor()
+import mysql.connector
 
 class PythonChat:
 
     def __init__(self):
+        load_dotenv()
+        self.db = mysql.connector.connect(user=os.environ['DB_USER'], password=os.environ['DB_PASS'], host=os.environ['DB_HOST'], database=os.environ['DB_NAME'])
+        self.cursor = self.db.cursor()
         self.logged_in_user = tuple()
+        self.user_db = UserActions(self.db,self.cursor)
 
     def get_public_ip(self) -> str:
         ctx = ssl.create_default_context()
@@ -23,26 +26,14 @@ class PythonChat:
         external_ip = urllib.request.urlopen('https://ident.me', context=ctx).read().decode('utf8')
         return external_ip
 
-    def handle_login(self, username:str ,password:str ) -> bool:
-        queryString = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
-        cursor.execute(queryString)
-        acct = cursor.fetchone()
-        return acct
+    def handle_login(self, username:str ,password:str) -> tuple:
+        user = self.user_db.get_user_acct(username, password)
+        return user
 
     def handle_signup(self, username:str, password:str) -> None:
-        add_user = ("INSERT INTO users "
-            "(username, password, ip, port) "
-            "VALUES (%s, %s, %s, %s)")
-        ip = self.get_public_ip()
-        user_data = (username, password, ip,'9000')
-        cursor.execute(add_user,user_data)
-        db.commit()
-
-    def username_exists(self, username:str) -> bool:
-        queryString = f"SELECT * FROM users WHERE username='{username}'"
-        cursor.execute(queryString)
-        acct = cursor.fetchone()
-        return True if acct else False
+        #TODO return boolean if acct creation was successful or not
+        user_ip = self.get_public_ip()
+        self.user_db.create_user_acct(username, password, user_ip, DEFAULT_PORT)
 
     def login_logic(self) -> bool:
         # TODO clean this up - lots of cleanup needed
@@ -65,7 +56,7 @@ class PythonChat:
         user_exists = True
         while user_exists:
             username = input("Choose a username: ")
-            user_exists = self.username_exists(username)
+            user_exists = self.user_db.username_exists(username)
             if user_exists:
                 print("Username already exists, please enter another.")
         password = pwinput.pwinput('Enter a password: ')
@@ -101,33 +92,25 @@ class PythonChat:
     :-----------------------------------------------------------------------------:
     `---._.-----------------------------------------------------------------._.---'
     """)
-        try:
-            startup = True
-            while startup:
-                loginChoice = input('Enter option: ')
-                if ( loginChoice == '1'):
-                    # User chose to login
-                    startup = self.login_logic()
-                elif ( loginChoice == '2'):
-                    # User chose to create an account
-                    self.signup_logic()
-                    break
-                else:
-                    print("Invalid entry")
-            
-            # If were here, startup sequence is complete and were logged in
-            #TODO launch something
-            print("Current logged in user info...")
-            print(self.logged_in_user)
+        startup = True
+        while startup:
+            loginChoice = input('Enter option: ')
+            if ( loginChoice == '1'):
+                # User chose to login
+                startup = self.login_logic()
+            elif ( loginChoice == '2'):
+                # User chose to create an account
+                self.signup_logic()
+                break
+            else:
+                print("Invalid entry")
 
-            # Lastly close connection
-            cursor.close()
-            db.close()
-        except Exception as e:
-            print(e)
-            print("Something went wrong - closing connections")
-            cursor.close()
-            db.close()
+        menu = Menu(self.logged_in_user, self.db, self.cursor)
+        while True:
+            menu.get_options()
+        #Just in case I guess
+        self.user_db.close_connection()
+
 
 if __name__ == "__main__":
     chat = PythonChat()
