@@ -1,3 +1,5 @@
+import time
+from utils.constants import ACTIVE_THRESHOLD
 
 class UserActions:
 
@@ -6,8 +8,8 @@ class UserActions:
         self.cursor = cursor
 
     def get_user_acct(self, username, password) -> tuple:
-        queryString = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
-        self.cursor.execute(queryString)
+        query_string = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
+        self.cursor.execute(query_string)
         acct = self.cursor.fetchone()
         return acct
 
@@ -20,10 +22,24 @@ class UserActions:
         self.db.commit()
 
     def username_exists(self, username:str) -> bool:
-        queryString = f"SELECT * FROM users WHERE username='{username}'"
-        self.cursor.execute(queryString)
+        query_string = f"SELECT * FROM users WHERE username='{username}'"
+        self.cursor.execute(query_string)
         acct = self.cursor.fetchone()
         return True if acct else False
+
+    def update_last_active(self, username:str, time:int) -> None:
+        query_string = f"UPDATE users SET last_active={time} WHERE username='{username}'"
+        self.cursor.execute(query_string)
+        self.db.commit()
+
+    def is_online(self, username:str) -> bool:
+        query_string = f"SELECT last_active FROM users WHERE username='{username}'"
+        self.cursor.execute(query_string)
+        data = self.cursor.fetchone()
+        
+        last_active = data[0]
+        now = int(time.time())
+        return now - last_active < ACTIVE_THRESHOLD
 
     def close_connection(self):
         self.cursor.close()

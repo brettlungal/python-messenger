@@ -6,8 +6,8 @@ class FriendActions:
         self.cursor = cursor
 
     def get_friends(self, username) -> tuple:
-        queryString = f"SELECT friend_username FROM friends WHERE username='{username}'"
-        self.cursor.execute(queryString)
+        query_string = f"SELECT friend_username FROM friends WHERE username='{username}'"
+        self.cursor.execute(query_string)
         friends = self.cursor.fetchall()
         return friends
 
