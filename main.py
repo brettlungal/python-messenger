@@ -10,6 +10,14 @@ import os
 from dotenv import load_dotenv
 import mysql.connector
 
+'''
+TODO items from pre-alpha testing
+    0: loop not exiting upon signin and trying to treat it as a signin
+    1: friend request actually goes to the friend to add them back
+    2: last active trackers for actual online input (and add field to new accts)
+    3: investigate file descriptor issue with socket communication
+'''
+
 class PythonChat:
 
     def __init__(self):
@@ -101,10 +109,10 @@ class PythonChat:
             elif ( loginChoice == '2'):
                 # User chose to create an account
                 self.signup_logic()
-                break
+                # TODO add some sort of successful signup message
+                continue
             else:
                 print("Invalid entry")
-
         menu = Menu(self.logged_in_user, self.db, self.cursor)
         while True:
             menu.get_options()

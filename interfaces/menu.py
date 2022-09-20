@@ -62,5 +62,3 @@ class Menu:
                 
         except ValueError:
             print("Please enter valid friend index as integer")
-        
-        # TODO grab that friends data and launch the chat client
