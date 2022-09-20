@@ -21,6 +21,12 @@ class UserActions:
         self.cursor.execute(add_user,user_data)
         self.db.commit()
 
+    def get_user_data(self,username):
+        query_string = f"SELECT ip,port FROM users WHERE username='{username}'"
+        self.cursor.execute(query_string)
+        data = self.cursor.fetchone()
+        return data
+
     def username_exists(self, username:str) -> bool:
         query_string = f"SELECT * FROM users WHERE username='{username}'"
         self.cursor.execute(query_string)

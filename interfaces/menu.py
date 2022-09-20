@@ -52,6 +52,14 @@ class Menu:
         try:
             parsed_choice = int(choice)
             # TODO check if index is in range of friends list
+            friends = self.friend_db.get_friends(self.username)
+            if parsed_choice > len(friends):
+                raise ValueError
+            else:
+                chat_friend_username = friends[parsed_choice][0]
+                friend_ip, friend_port = self.user_db.get_user_data(chat_friend_username)
+                chat = ChatClient(self.host, int(self.port), friend_ip, int(friend_port))
+                
         except ValueError:
             print("Please enter valid friend index as integer")
         
