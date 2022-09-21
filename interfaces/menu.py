@@ -13,6 +13,8 @@ class Menu:
         self.user_db = UserActions(db, cursor)
         self.friend_db = FriendActions(db, cursor)
 
+        self.user_db.update_last_active(self.username)
+
     def get_options(self):
         choice = input("1: Add Friends\n2: Show friends\n3: Start Chat\n")
         if choice == "1":

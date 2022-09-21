@@ -12,7 +12,7 @@ import mysql.connector
 
 '''
 TODO items from pre-alpha testing
-    0: loop not exiting upon signin and trying to treat it as a signin
+    0: loop not exiting upon signin and trying to treat it as a signin --done
     1: friend request actually goes to the friend to add them back
     2: last active trackers for actual online input (and add field to new accts)
     3: investigate file descriptor issue with socket communication

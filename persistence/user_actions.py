@@ -33,8 +33,9 @@ class UserActions:
         acct = self.cursor.fetchone()
         return True if acct else False
 
-    def update_last_active(self, username:str, time:int) -> None:
-        query_string = f"UPDATE users SET last_active={time} WHERE username='{username}'"
+    def update_last_active(self, username:str) -> None:
+        active = int(time.time())
+        query_string = f"UPDATE users SET last_active={active} WHERE username='{username}'"
         self.cursor.execute(query_string)
         self.db.commit()
 
