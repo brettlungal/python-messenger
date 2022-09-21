@@ -21,6 +21,12 @@ class UserActions:
         self.cursor.execute(add_user,user_data)
         self.db.commit()
 
+    def check_user_mailbox(self, username):
+        query_string = f"SELECT mailbox FROM users WHERE username='{username}'"
+        self.cursor.execute(query_string)
+        data = self.cursor.fetchone()
+        return data
+
     def get_user_data(self,username):
         query_string = f"SELECT ip,port FROM users WHERE username='{username}'"
         self.cursor.execute(query_string)
@@ -47,6 +53,11 @@ class UserActions:
         last_active = data[0]
         now = int(time.time())
         return now - last_active < ACTIVE_THRESHOLD
+
+    def update_ip(self, username, new_ip):
+        query_string = f"UPDATE users SET ip='{new_ip}' WHERE username='{username}'"
+        self.cursor.execute(query_string)
+        self.db.commit()
 
     def close_connection(self):
         self.cursor.close()
