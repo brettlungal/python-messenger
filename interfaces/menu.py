@@ -1,6 +1,8 @@
+from persistence.mailbox_actions import MailboxActions
 from persistence.user_actions import UserActions
 from persistence.friend_actions import FriendActions
 from interfaces.chat import ChatClient
+from interfaces.mailbox import Mailbox
 from tabulate import tabulate
 import sys
 
@@ -12,11 +14,13 @@ class Menu:
         self.port = user_info[3]
         self.user_db = UserActions(db, cursor)
         self.friend_db = FriendActions(db, cursor)
+        self.mail_db = MailboxActions(db, cursor)
 
-        self.user_db.update_last_active(self.username)
 
     def get_options(self):
-        choice = input("1: Add Friends\n2: Show friends\n3: Start Chat\n")
+        messages = self.mail_db.get_new_messages(self.username)
+        msg_count = len(messages) if messages is not None else 0
+        choice = input(f"1: Add Friends\n2: Show friends\n3: Start Chat\n4: Check Mailbox[{msg_count}]\n\n>")
         if choice == "1":
             friend_username = input("Enter friends username: ")
             self.add_friend(friend_username)
@@ -24,9 +28,13 @@ class Menu:
             self.display_friends()
         elif choice == "3":
             self.launch_chat()
+        elif choice == "4":
+            mail = Mailbox(messages)
+            mail.launch_mailbox_interface()
         elif choice == "q":
             self.user_db.close_connection()
             self.friend_db.close_connection()
+            self.mail_db.close_connection()
             sys.exit(1)
     
     def add_friend(self,friend_username):
@@ -60,7 +68,8 @@ class Menu:
             else:
                 chat_friend_username = friends[parsed_choice][0]
                 friend_ip, friend_port = self.user_db.get_user_data(chat_friend_username)
-                chat = ChatClient(self.host, int(self.port), friend_ip, int(friend_port))
+                print(f"starting chat with {chat_friend_username} at address {friend_ip} on port {friend_port}")
+                # chat = ChatClient(self.host, int(self.port), friend_ip, int(friend_port))
                 
         except ValueError:
             print("Please enter valid friend index as integer")
