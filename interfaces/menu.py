@@ -42,6 +42,7 @@ class Menu:
             self.friend_db.create_friendship(self.username, friend_username)
         else:
             print("Friends username does not exist!")
+        self.user_db.update_last_active(self.username)
 
     def display_friends(self):
         friends = self.friend_db.get_friends(self.username)
@@ -55,9 +56,11 @@ class Menu:
         print("\n\n")
         print(tabulate(friends, headers=['Friend', 'Status'], tablefmt='orgtbl'))
         print("\n\n")
+        self.user_db.update_last_active(self.username)
     
     def launch_chat(self):
         self.display_friends()
+        self.user_db.update_last_active(self.username)
         choice = input("Select a friend to chat with: ")
         try:
             parsed_choice = int(choice)

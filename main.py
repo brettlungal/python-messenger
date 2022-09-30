@@ -1,5 +1,4 @@
-import urllib.request
-import ssl
+import requests
 import pwinput
 from interfaces.menu import Menu
 from utils.constants import DEFAULT_PORT
@@ -16,6 +15,7 @@ TODO items from pre-alpha testing
     1: friend request actually goes to the friend to add them back
     2: last active trackers for actual online input (and add field to new accts)
     3: investigate file descriptor issue with socket communication
+    4: get public ip upon login and update it if changed from whats in table -- done
 '''
 
 class PythonChat:
@@ -28,11 +28,8 @@ class PythonChat:
         self.user_db = UserActions(self.db,self.cursor)
 
     def get_public_ip(self) -> str:
-        ctx = ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
-        external_ip = urllib.request.urlopen('https://ident.me', context=ctx).read().decode('utf8')
-        return external_ip
+        ip = requests.get('https://api.ipify.org').content.decode('utf8')
+        return ip
 
     def handle_login(self, username:str ,password:str) -> tuple:
         user = self.user_db.get_user_acct(username, password)
@@ -58,6 +55,9 @@ class PythonChat:
         if success:
             startup = False
             self.logged_in_user = success
+            current_ip = self.get_public_ip()
+            if current_ip != self.logged_in_user[2]:
+                self.user_db.update_ip(self.logged_in_user[0], current_ip)
         return startup
 
     def signup_logic(self) -> None:
