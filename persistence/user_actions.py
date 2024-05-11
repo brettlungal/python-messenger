@@ -21,12 +21,6 @@ class UserActions:
         self.cursor.execute(add_user,user_data)
         self.db.commit()
 
-    def check_user_mailbox(self, username):
-        query_string = f"SELECT mailbox FROM users WHERE username='{username}'"
-        self.cursor.execute(query_string)
-        data = self.cursor.fetchone()
-        return data
-
     def get_user_data(self,username):
         query_string = f"SELECT ip,port FROM users WHERE username='{username}'"
         self.cursor.execute(query_string)
