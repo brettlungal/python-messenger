@@ -21,21 +21,23 @@ class Menu:
         messages = self.mail_db.get_new_messages(self.username)
         msg_count = len(messages) if messages is not None else 0
         choice = input(f"1: Add Friends\n2: Show friends\n3: Start Chat\n4: Check Mailbox[{msg_count}]\n\n>")
-        if choice == "1":
-            friend_username = input("Enter friends username: ")
-            self.add_friend(friend_username)
-        elif choice == "2":
-            self.display_friends()
-        elif choice == "3":
-            self.launch_chat()
-        elif choice == "4":
-            mail = Mailbox(messages)
-            mail.launch_mailbox_interface()
-        elif choice == "q":
-            self.user_db.close_connection()
-            self.friend_db.close_connection()
-            self.mail_db.close_connection()
-            sys.exit(1)
+        match(choice):
+            #TODO - combine 1 and 2 into friends class where you can view or add friends
+            case "1":
+                friend_username = input("Enter friends username: ")
+                self.add_friend(friend_username)
+            case "2":
+                self.display_friends()
+            case "3":
+                self.launch_chat()
+            case "4":
+                mail = Mailbox(messages)
+                mail.launch_mailbox_interface()
+            case "q":
+                self.user_db.close_connection()
+                self.friend_db.close_connection()
+                self.mail_db.close_connection()
+                sys.exit(1)
     
     def add_friend(self,friend_username):
         if self.user_db.username_exists(friend_username):

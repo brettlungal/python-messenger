@@ -21,6 +21,7 @@ class Login:
 
     def handle_login(self, username:str ,password:str) -> tuple:
         user = self.user_db.get_user_acct(username, password)
+        print(user)
         return user
 
     def handle_signup(self, username:str, password:str) -> None:
@@ -34,7 +35,7 @@ class Login:
         while not success:
             username = input('Username: ')
             if username.lower() == 'q':
-                break
+                return None
             password = pwinput.pwinput('Password: ')
             success = self.handle_login(username,password)
             if not success:

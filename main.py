@@ -1,5 +1,6 @@
 # Misc
 import os
+import sys
 from dotenv import load_dotenv
 import mysql.connector
 
@@ -36,9 +37,13 @@ class PythonChat:
             match(login_choice):
                 case "1":
                     authenticated_user = login_helper.login_logic()
-                    signed_in = True
+                    if authenticated_user:
+                        signed_in = True
                 case "2":
                     login_helper.signup_logic()
+                case "3":
+                    self.user_db.close_connection()
+                    sys.exit()
 
         menu = Menu(authenticated_user, self.db, self.cursor)
         menu.get_options()

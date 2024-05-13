@@ -1,0 +1,7 @@
+
+
+class Friends:
+
+    def __init__(self):
+        self.ba = 'zinga'
+    
