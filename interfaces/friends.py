@@ -35,7 +35,6 @@ class Friends:
         for friend in friends:
             online = "Online" if self.user_db.is_online(friend) else "Offline"
             table_data.append([friend,online])
-        print("\n\n")
         print(tabulate(table_data, headers=['Friend', 'Status'], tablefmt='orgtbl'))
-        print("\n\n")
+        print("\n")
         self.user_db.update_last_active(self.username)
