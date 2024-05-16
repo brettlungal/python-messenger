@@ -1,9 +1,9 @@
+import os
 import requests
 import pwinput
 import mysql.connector
-import os
 from dotenv import load_dotenv
-from interfaces.menu import Menu
+
 from utils.constants import DEFAULT_PORT
 from persistence.user_actions import UserActions
 
