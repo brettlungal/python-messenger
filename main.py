@@ -14,12 +14,6 @@ from persistence.user_actions import UserActions
 # Constants
 from utils.constants import WELCOME_MENU
 
-
-#    TODO items from pre-alpha testing
-#    1. Loop exiting after first menu option selection (must loop but exit when necessary)
-#    2. Friend requests must actually go to user mailbox to accept or reject
-#    3. Make chat UI and exit menu loop for it (sub loop?)
-
 class PythonChat:
 
     def __init__(self):
