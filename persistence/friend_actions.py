@@ -9,7 +9,8 @@ class FriendActions:
         query_string = f"SELECT friend_username FROM friends WHERE username='{username}'"
         self.cursor.execute(query_string)
         friends = self.cursor.fetchall()
-        return friends
+        formatted_friends = [friend[0] for friend in friends]
+        return formatted_friends
 
     def create_friendship(self, current_user:str, friend_user:str) -> None:
         add_friend = ("INSERT INTO friends "
