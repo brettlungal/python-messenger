@@ -28,3 +28,4 @@
     `---._.-----------------------------------------------------------------._.---'
 
 - Chat with your friends over the cli like a real badass programmer
+- Chris helped a bit
