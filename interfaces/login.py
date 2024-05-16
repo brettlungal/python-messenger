@@ -21,7 +21,6 @@ class Login:
 
     def handle_login(self, username:str ,password:str) -> tuple:
         user = self.user_db.get_user_acct(username, password)
-        print(user)
         return user
 
     def handle_signup(self, username:str, password:str) -> None:
