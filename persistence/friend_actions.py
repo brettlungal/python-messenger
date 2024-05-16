@@ -16,9 +16,9 @@ class FriendActions:
     
     def create_friend_request(self, from_username, to_username) -> bool:
         add_friend = ("INSERT INTO friend_request "
-                    "(from_username, to_username, status, send_at) "
+                    "(from_username, to_username, status, sent_at) "
                     "VALUES (%s, %s, %s, %s)")
-        friendship_data = (from_username, to_username, "PENDING",datetime.now(timezone.utc))
+        friendship_data = (from_username, to_username, "PENDING",str(datetime.now(timezone.utc)))
         try:
             self.cursor.execute(add_friend,friendship_data)
             self.db.commit()
