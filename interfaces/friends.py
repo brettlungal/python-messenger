@@ -8,12 +8,14 @@ class Friends:
         self.username = username
     
     def launch_friends_menu(self):
-        choice = input("1: Add Friend\n2: Show Friends List\n\n>")
+        choice = input("1: Add Friend\n2: Show Friends List\n3: Back\n>")
         match(choice):
             case "1":
                 print('add friend')
             case "2":
                 self.display_friends()
+            case "3":
+                pass
         
 
     def add_friend(self):

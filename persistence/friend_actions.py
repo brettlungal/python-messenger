@@ -1,4 +1,6 @@
 
+from datetime import datetime, timezone
+
 class FriendActions:
 
     def __init__(self, db, cursor):
@@ -11,6 +13,18 @@ class FriendActions:
         friends = self.cursor.fetchall()
         formatted_friends = [friend[0] for friend in friends]
         return formatted_friends
+    
+    def create_friend_request(self, from_username, to_username) -> bool:
+        add_friend = ("INSERT INTO friend_request "
+                    "(from_username, to_username, status, send_at) "
+                    "VALUES (%s, %s, %s, %s)")
+        friendship_data = (from_username, to_username, "PENDING",datetime.now(timezone.utc))
+        try:
+            self.cursor.execute(add_friend,friendship_data)
+            self.db.commit()
+            return True
+        except Exception as e:
+            return False
 
     def create_friendship(self, current_user:str, friend_user:str) -> None:
         add_friend = ("INSERT INTO friends "
