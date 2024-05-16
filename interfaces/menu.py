@@ -30,8 +30,6 @@ class Menu:
                     friends.launch_friends_menu()
                 case "2":
                     print('chat launched')
-                    # chat = ChatClient()
-                    # chat.launch_chat()
                 case "q":
                     self.user_db.close_connection()
                     self.friend_db.close_connection()

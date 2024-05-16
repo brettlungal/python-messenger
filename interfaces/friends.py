@@ -24,7 +24,8 @@ class Friends:
     def add_friend(self):
         friend_username = input('Enter your friends username: ')
         if self.user_db.username_exists(friend_username):
-            self.friend_db.create_friendship(self.username, friend_username)
+            success = self.friend_db.create_friend_request(self.username, friend_username)
+            print("Friend request sent!") if success else print("Error sending friend request. Please try again.")
         else:
             print("Friends username does not exist!")
         self.user_db.update_last_active(self.username)
