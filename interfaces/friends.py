@@ -7,10 +7,12 @@ class Friends:
         self.friend_db = friend_db
         self.user_db = user_db
         self.username = username
+        self.pending_requests = self.friend_db.get_pending_friend_requests(self.username)
+        self.received_requests = self.friend_db.get_friend_requests(self.username)
     
     def launch_friends_menu(self):
         while True:
-            choice = input("1: Add Friend\n2: Show Friends List\n3: Back\n>")
+            choice = input(f"1: Add Friend\n2: Show Friends List\n3: Show Friend Requests[{len(self.received_requests)}]\n4: Back\n>")
             os.system('cls')
             match(choice):
                 case "1":
@@ -18,8 +20,17 @@ class Friends:
                 case "2":
                     self.display_friends()
                 case "3":
+                    self.display_requests()
+                case "4":
                     break
-        
+    
+    def display_requests(self):
+        print("Received Requests")
+        print(tabulate(self.received_requests, headers=['Username','Sent At'], tablefmt='orgtbl'))
+        print('\n')
+        print("Sent Requests")
+        print(tabulate(self.pending_requests, headers=['Username', 'Status' ,'Sent At'], tablefmt='orgtbl'))
+        print('\n')
 
     def add_friend(self):
         friend_username = input('Enter your friends username: ')

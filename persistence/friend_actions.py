@@ -25,6 +25,20 @@ class FriendActions:
             return True
         except Exception as e:
             return False
+        
+    def get_pending_friend_requests(self, from_username):
+        query_string = f"SELECT to_username, status, sent_at FROM friend_request WHERE from_username='{from_username}' AND status='PENDING'"
+        self.cursor.execute(query_string)
+        requests = self.cursor.fetchall()
+        formatted_requests = [[friend_req[0],friend_req[1], friend_req[2].replace(tzinfo=timezone.utc).astimezone(tz=None)] for friend_req in requests]
+        return formatted_requests
+
+    def get_friend_requests(self, to_username):
+        query_string = f"SELECT from_username, sent_at FROM friend_request WHERE to_username='{to_username}' AND status='PENDING'"
+        self.cursor.execute(query_string)
+        requests = self.cursor.fetchall()
+        formatted_requests = [[friend_req[0],friend_req[1].replace(tzinfo=timezone.utc).astimezone(tz=None)] for friend_req in requests]
+        return formatted_requests
 
     def create_friendship(self, current_user:str, friend_user:str) -> None:
         add_friend = ("INSERT INTO friends "

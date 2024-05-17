@@ -20,9 +20,11 @@ class Menu:
 
 
     def get_options(self):
+        friend_requests = len(self.friend_db.get_friend_requests(self.username))
+
         while True:
 
-            choice = input(f"1: Friends\n2: Start Chat(Under Construction)\nq: Quit\n\n>")
+            choice = input(f"1: Friends[{friend_requests}]\n2: Start Chat(Under Construction)\nq: Quit\n\n>")
             os.system('cls')
             match(choice):
                 case "1":
