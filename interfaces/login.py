@@ -1,21 +1,15 @@
-import os
 import requests
 import pwinput
-import mysql.connector
-from dotenv import load_dotenv
 
 from utils.constants import DEFAULT_PORT
-from persistence.user_actions import UserActions
 
 class Login:
-    def __init__(self):
-        load_dotenv()
-        self.db = mysql.connector.connect(user=os.environ['DB_USER'], password=os.environ['DB_PASS'], host=os.environ['DB_HOST'], database=os.environ['DB_NAME'])
-        self.cursor = self.db.cursor()
+    def __init__(self, user_db):
         self.logged_in_user = tuple()
-        self.user_db = UserActions(self.db,self.cursor)
+        self.user_db = user_db
 
     def get_public_ip(self) -> str:
+        # TODO add error handling here
         ip = requests.get('https://api.ipify.org').content.decode('utf8')
         return ip
 
@@ -24,7 +18,9 @@ class Login:
         return user
 
     def handle_signup(self, username:str, password:str) -> None:
-        #TODO return boolean if acct creation was successful or not
+        # TODO return boolean if acct creation was successful or not
+        # TODO add password requirements and rejections for invalid passwords
+        # TODO add password encryption
         user_ip = self.get_public_ip()
         self.user_db.create_user_acct(username, password, user_ip, DEFAULT_PORT)
 
@@ -47,6 +43,8 @@ class Login:
         return success
 
     def signup_logic(self) -> None:
+        # TODO add option to quit from signup logic - currently only way out is successful signup
+        # TODO add logic to handle failed signup
         user_exists = True
         while user_exists:
             username = input("Choose a username: ")

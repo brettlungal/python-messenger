@@ -23,10 +23,11 @@ class PythonChat:
         self.user_db = UserActions(self.db,self.cursor)
 
     def run(self):
-        login_helper = Login()
+        login_helper = Login(self.user_db)
         signed_in = False
         while not signed_in:
             print(WELCOME_MENU)
+            # TODO add welcome menu and login choice to its own class to encapsulate display and options in one place
             login_choice = input('Enter Option: ')
             match(login_choice):
                 case "1":
@@ -40,7 +41,7 @@ class PythonChat:
                     sys.exit()
 
         menu = Menu(authenticated_user, self.db, self.cursor)
-        menu.get_options()
+        menu.show()
         self.user_db.close_connection()
 
 
