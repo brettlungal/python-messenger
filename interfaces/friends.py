@@ -12,7 +12,7 @@ class Friends:
     
     def launch_friends_menu(self):
         while True:
-            choice = input(f"1: Add Friend\n2: Show Friends List\n3: Show Friend Requests[{len(self.received_requests)}]\n4: Back\n>")
+            choice = input(f"1: Add Friend\n2: Show Friends List\n3: Show Friend Requests[{len(self.received_requests)}]\n4: Respond To Request[{len(self.received_requests)}]\n5: Back\n>")
             os.system('cls')
             match(choice):
                 case "1":
@@ -22,15 +22,31 @@ class Friends:
                 case "3":
                     self.display_requests()
                 case "4":
+                    self.respond_to_request()
+                case "5":
                     break
     
     def display_requests(self):
         print("Received Requests")
-        print(tabulate(self.received_requests, headers=['Username','Sent At'], tablefmt='orgtbl'))
+        print(tabulate(self.received_requests, headers=['Username','Sent At'], tablefmt='orgtbl', showindex="always"))
         print('\n')
         print("Sent Requests")
         print(tabulate(self.pending_requests, headers=['Username', 'Status' ,'Sent At'], tablefmt='orgtbl'))
         print('\n')
+
+    def respond_to_request(self):
+        print(tabulate(self.received_requests, headers=['Username','Sent At'], tablefmt='orgtbl', showindex="always"))
+        # TODO allow returning to previous menu, and determine rejection from accepting
+        index = input('Enter row index to respond to: ')
+        parsed_index = int(index)
+        try:
+            if (parsed_index > len(self.received_requests)):
+                raise ValueError
+            self.friend_db.accept_friend_request(self.received_requests[parsed_index], self.username)
+            self.received_requests = self.friend_db.get_friend_requests(self.username)
+        except ValueError:
+            print('Invalid index')
+        
 
     def add_friend(self):
         friend_username = input('Enter your friends username: ')
